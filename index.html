@@ -1,15 +1,29 @@
 <!doctype html>
-<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#205c4b"><title>暮らしの家計簿 v1.0.6</title><link rel="icon" type="image/png" href="./3A904EBF-8A65-47F8-8D44-F09FCBFB4BF7.png?v=1.0.2"><link rel="apple-touch-icon" href="./3A904EBF-8A65-47F8-8D44-F09FCBFB4BF7.png?v=1.0.2">
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#205c4b"><title>暮らしの家計簿 v1.0.7</title><link rel="icon" type="image/png" href="./3A904EBF-8A65-47F8-8D44-F09FCBFB4BF7.png?v=1.0.2"><link rel="apple-touch-icon" href="./3A904EBF-8A65-47F8-8D44-F09FCBFB4BF7.png?v=1.0.2">
 <style>:root{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",sans-serif;color:#20362f;background:#f3f7f4}*{box-sizing:border-box}body{margin:0}header{background:#205c4b;color:white;padding:24px 18px}h1{font-size:24px;margin:0}header p{margin:8px 0 0;color:#d6e9df;font-size:13px}main{max-width:850px;margin:auto;padding:15px}nav{display:flex;gap:7px;overflow:auto;margin-bottom:15px}button{font:inherit;cursor:pointer;border:0;border-radius:10px;padding:12px 15px;background:#dcebe3;color:#174d3d}button.primary,nav button.active{background:#21674f;color:white}.danger{background:#f8e0df;color:#a52b29}.card{background:white;border:1px solid #d5e2da;border-radius:17px;padding:19px;margin-bottom:15px}h2{font-size:19px;margin:0 0 16px}h3{font-size:16px}label{display:block;font-size:14px;color:#4a6357;margin-bottom:6px}input,select,textarea{font:inherit;min-height:45px;padding:10px;border:1px solid #bbd0c4;border-radius:9px;background:white;width:100%;color:#213a2f}textarea{min-height:88px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.full{grid-column:1/-1}.field{min-width:0}.muted{font-size:13px;color:#62766c;line-height:1.6}.stat{background:#edf5f0;padding:16px;border-radius:12px}.stat strong{display:block;font-size:23px;margin-top:7px}.record{padding:13px 0;border-bottom:1px solid #e3ebe5;display:flex;justify-content:space-between;gap:12px;align-items:center}.record:last-child{border:0}.record small{display:block;color:#688075;margin-top:4px;line-height:1.5}.amount{white-space:nowrap;font-weight:bold}.negative{color:#ad3c35}.positive{color:#1e7454}.hidden{display:none!important}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.note{font-size:13px;line-height:1.6;color:#597367}.bar{height:13px;background:#e5eee8;border-radius:8px;overflow:hidden}.bar span{display:block;background:#277454;height:100%}@media(max-width:460px){.grid{gap:9px}.card{padding:15px}header{padding:21px 15px}}</style></head>
-<body><header><h1>暮らしの家計簿</h1><p>生活管理システム 第2号アプリ | v1.0.6</p></header><main>
+<body><header><h1>暮らしの家計簿</h1><p>生活管理システム 第2号アプリ | v1.0.7</p></header><main>
 <p id="storageWarning" class="panel danger hidden" role="alert">保存データを読み込めませんでした。元のデータを保護するため、登録・削除・予算保存・取り込み・復元・書き出しを停止しています。この状態でサイトデータを削除しないでください。</p>
 <nav><button data-tab="dashboard" class="active">ホーム</button><button data-tab="entry">収入・支出</button><button data-tab="history">履歴</button><button data-tab="settings">予算・データ</button></nav>
-<section id="dashboard"><div class="card"><h2>今月の家計</h2><div class="field"><label for="month">集計する月</label><input id="month" type="month"></div><div class="grid" style="margin-top:14px"><div class="stat">収入<strong id="incomeTotal">¥0</strong></div><div class="stat">支出<strong id="expenseTotal">¥0</strong></div><div class="stat">収支<strong id="balanceTotal">¥0</strong></div><div class="stat">予算残額<strong id="budgetLeft">—</strong></div></div><h3>月間支出予算</h3><div class="bar"><span id="budgetBar" style="width:0"></span></div><p id="budgetDescription" class="note"></p></div><div class="card"><h2>カテゴリ別支出</h2><div id="categorySummary"></div></div><div class="card"><h2>最近の記録</h2><div id="recentRecords"></div></div></section>
+<section id="dashboard"><div class="card"><h2>家計の集計</h2><div class="grid">
+<div class="field"><label for="dashboardPeriod">表示単位</label><select id="dashboardPeriod">
+<option value="year">年単位</option><option value="month" selected>月単位</option><option value="week">週単位</option><option value="day">日別</option>
+</select></div>
+<div class="field" id="dashboardYearField" hidden><label for="dashboardYear">表示する年（西暦）</label><input id="dashboardYear" type="number" inputmode="numeric" min="1" max="9999" step="1"></div>
+<div class="field" id="dashboardMonthField"><label for="dashboardMonth">表示する月</label><input id="dashboardMonth" type="month" placeholder="YYYY-MM"></div>
+<div class="field" id="dashboardDateField" hidden><label id="dashboardDateLabel" for="dashboardDate">表示する日</label><input id="dashboardDate" type="date" min="0001-01-01" max="9999-12-31"></div>
+</div><p class="note" id="dashboardRange" aria-live="polite"></p><div class="grid" style="margin-top:14px"><div class="stat">収入<strong id="incomeTotal">¥0</strong></div><div class="stat">支出<strong id="expenseTotal">¥0</strong></div><div class="stat">収支<strong id="balanceTotal">¥0</strong></div><div class="stat" id="budgetLeftCard">予算残額<strong id="budgetLeft">—</strong></div></div><div id="monthlyBudget"><h3>月間支出予算</h3><div class="bar"><span id="budgetBar" style="width:0"></span></div><p id="budgetDescription" class="note"></p></div></div><div class="card"><h2>カテゴリ別支出</h2><div id="categorySummary"></div></div><div class="card"><h2>表示期間の最近の記録</h2><div id="recentRecords"></div></div></section>
 <section id="entry" class="hidden"><div class="card"><h2>収入・支出を登録</h2><form id="entryForm"><div class="grid"><div class="field"><label for="kind">区分</label><select id="kind"><option value="expense">支出</option><option value="income">収入</option></select></div><div class="field"><label for="date">日付</label><input id="date" type="date" required></div><div class="field"><label for="amount">税込合計金額（円）</label><input id="amount" type="number" min="1" step="1" inputmode="numeric" required></div><div class="field"><label for="category">カテゴリ</label><select id="category"><option>食費</option><option>日用品</option><option>交通費</option><option>住居費</option><option>水道光熱費</option><option>通信費</option><option>医療費</option><option>娯楽費</option><option>給与</option><option>その他</option></select></div><div class="field full"><label for="store">店舗・相手先</label><input id="store" placeholder="例：セブン‐イレブン砂川東1条店"></div><div class="field"><label for="payment">支払い方法</label><select id="payment"><option>PayPay</option><option>現金</option><option>クレジットカード</option><option>口座振替</option><option>auPAY</option><option>nanaco</option><option>その他</option></select></div><div class="field"><label for="time">時刻（任意）</label><input id="time" type="time"></div><div class="field full" id="customPaymentField" hidden><label for="customPayment">支払い方法（手入力）</label><input id="customPayment" type="text" placeholder="例：交通系IC" disabled></div><div class="field full"><label for="items">品目・内訳（1行に1商品、任意）</label><textarea id="items" placeholder="ルイボスティー 600ml ×1：108円&#10;無糖コーヒー 375g ×2：256円"></textarea></div><div class="field full"><label for="memo">メモ（任意）</label><textarea id="memo" placeholder="例：コーヒー1本は会社の人に譲渡"></textarea></div></div><div class="actions"><button type="submit" class="primary">記録を保存</button><button type="button" id="receiptPreset">11/21 セブンのレシートを入力</button></div></form><p id="entryStatus" role="status" class="note"></p><p class="note">購入履歴は家計簿に保存します。在庫は変更しません。既存の献立・買い物アプリとの自動同期は未対応です。</p></div></section>
-<section id="history" class="hidden"><div class="card"><h2>収入・支出の履歴</h2><label for="historyMonth">表示月</label><input id="historyMonth" type="month"><div id="historyRecords"></div></div></section>
-<section id="settings" class="hidden"><div class="card"><h2>予算設定</h2><label for="budget">毎月の支出予算（円）</label><input id="budget" type="number" min="0" step="1" inputmode="numeric"><div class="actions"><button class="primary" id="saveBudget">予算を保存</button></div></div><div class="card"><h2>献立アプリの購入履歴を取り込む</h2><p class="note">「暮らしの献立・買い物」の「設定」からJSONバックアップを書き出し、そのファイルをここで選んでください。購入履歴のみ追加します。家計簿の既存記録と献立アプリの在庫・食事記録は変更しません。日付・時刻・店舗・金額が同じ購入は取り込みません。</p><label for="mealImport">献立アプリのバックアップ（life-suite-backup-...json）</label><input id="mealImport" type="file" accept=".json,application/json"><p id="mealImportStatus" role="status" class="note"></p></div><div class="card"><h2>バックアップと復元</h2><p class="note">データはこのブラウザ内に保存されます。別端末への自動同期はありません。定期的にJSONを保存してください。読み込みは現在の家計簿データを置き換えます。</p><div class="actions"><button class="primary" id="exportData">JSONを書き出す</button></div><label for="importData" style="margin-top:18px">JSONを読み込む</label><input id="importData" type="file" accept=".json,application/json"><p id="dataStatus" role="status" class="note"></p></div><div class="card"><h2>アプリの更新</h2><p class="note">v1.0.6。機能更新時にはバージョン番号を変更します。更新前にはJSONバックアップを推奨します。</p><button id="checkUpdate">最新版を確認して更新</button><p id="updateStatus" role="status" class="note"></p></div></section></main>
+<section id="history" class="hidden"><div class="card"><h2>収入・支出の履歴</h2><div class="grid">
+<div class="field"><label for="historyPeriod">表示単位</label><select id="historyPeriod">
+<option value="year">年単位</option><option value="month" selected>月単位</option><option value="week">週単位</option><option value="day">日別</option>
+</select></div>
+<div class="field" id="historyYearField" hidden><label for="historyYear">表示する年（西暦）</label><input id="historyYear" type="number" inputmode="numeric" min="1" max="9999" step="1"></div>
+<div class="field" id="historyMonthField"><label for="historyMonth">表示する月</label><input id="historyMonth" type="month" placeholder="YYYY-MM"></div>
+<div class="field" id="historyDateField" hidden><label id="historyDateLabel" for="historyDate">表示する日</label><input id="historyDate" type="date" min="0001-01-01" max="9999-12-31"></div>
+</div><p class="note" id="historyRange" aria-live="polite"></p><div id="historyRecords"></div></div></section>
+<section id="settings" class="hidden"><div class="card"><h2>予算設定</h2><label for="budget">毎月の支出予算（円）</label><input id="budget" type="number" min="0" step="1" inputmode="numeric"><div class="actions"><button class="primary" id="saveBudget">予算を保存</button></div></div><div class="card"><h2>献立アプリの購入履歴を取り込む</h2><p class="note">「暮らしの献立・買い物」の「設定」からJSONバックアップを書き出し、そのファイルをここで選んでください。購入履歴のみ追加します。家計簿の既存記録と献立アプリの在庫・食事記録は変更しません。日付・時刻・店舗・金額が同じ購入は取り込みません。</p><label for="mealImport">献立アプリのバックアップ（life-suite-backup-...json）</label><input id="mealImport" type="file" accept=".json,application/json"><p id="mealImportStatus" role="status" class="note"></p></div><div class="card"><h2>バックアップと復元</h2><p class="note">データはこのブラウザ内に保存されます。別端末への自動同期はありません。定期的にJSONを保存してください。読み込みは現在の家計簿データを置き換えます。</p><div class="actions"><button class="primary" id="exportData">JSONを書き出す</button></div><label for="importData" style="margin-top:18px">JSONを読み込む</label><input id="importData" type="file" accept=".json,application/json"><p id="dataStatus" role="status" class="note"></p></div><div class="card"><h2>アプリの更新</h2><p class="note">v1.0.7。機能更新時にはバージョン番号を変更します。更新前にはJSONバックアップを推奨します。</p><button id="checkUpdate">最新版を確認して更新</button><p id="updateStatus" role="status" class="note"></p></div></section></main>
 <script>
-(()=>{'use strict';const KEY='life-budget-v1',VERSION='1.0.6',money=n=>'¥'+Number(n||0).toLocaleString('ja-JP'),today=()=>new Date().toLocaleDateString('sv-SE'),$=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));let db={schema:1,budget:3000,records:[]};
+(()=>{'use strict';const KEY='life-budget-v1',VERSION='1.0.7',money=n=>'¥'+Number(n||0).toLocaleString('ja-JP'),today=()=>new Date().toLocaleDateString('sv-SE'),$=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));let db={schema:1,budget:3000,records:[]};
 let storageReadFailed=false;
 try {
   const raw=localStorage.getItem(KEY);
@@ -32,7 +46,7 @@ function persist(){
   localStorage.setItem(KEY,JSON.stringify(db));
   render();
 }
-function show(tab){['dashboard','entry','history','settings'].forEach(t=>$(t).classList.toggle('hidden',t!==tab));document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));render()}document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>show(b.dataset.tab));$('date').value=today();$('month').value=today().slice(0,7);$('historyMonth').value=$('month').value;$('budget').value=db.budget;
+function show(tab){['dashboard','entry','history','settings'].forEach(t=>$(t).classList.toggle('hidden',t!==tab));document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));render()}document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>show(b.dataset.tab));$('date').value=today();$('budget').value=db.budget;
 function syncCustomPayment(){
   const isOther=$('payment').value==='その他';
   $('customPaymentField').hidden=!isOther;
@@ -46,8 +60,100 @@ const payment=selectedPayment==='その他'?$('customPayment').value.trim()||sel
 if(db.records.some(x=>x.date===date&&x.time===time&&x.store===store&&x.amount===amount&&x.kind===kind)){if(!confirm('同じ日付・時刻・店舗・金額の記録があります。重複して保存しますか？'))return}db.records.push({id:crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random(),date,time,kind,amount,category:$('category').value,store,payment,items:$('items').value.trim(),memo:$('memo').value.trim()});persist();$('entryStatus').textContent='記録を保存しました。';$('entryForm').reset();syncCustomPayment();$('date').value=today()};
 function recordHTML(r){return '<div class="record"><div><b>'+esc(r.store||r.category||'記録')+'</b><small>'+esc(r.date)+(r.time?' '+esc(r.time):'')+'｜'+esc(r.category)+'｜'+esc(r.payment)+'</small>'+(r.items?'<small>'+esc(r.items).replace(/\n/g,' / ')+'</small>':'')+(r.memo?'<small>'+esc(r.memo)+'</small>':'')+'</div><div style="text-align:right"><div class="amount '+(r.kind==='income'?'positive':'negative')+'">'+(r.kind==='income'?'+':'−')+money(r.amount)+'</div><button class="danger" data-delete="'+esc(r.id)+'" style="margin-top:7px;padding:8px">削除</button></div></div>'}
 function bindDelete(){document.querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>{if(storageReadFailed)return;if(!confirm('この記録を削除しますか？'))return;db.records=db.records.filter(x=>x.id!==b.dataset.delete);persist()})}
-function render(){const m=$('month').value;const month=db.records.filter(x=>x.date.startsWith(m)),inc=month.filter(x=>x.kind==='income').reduce((a,x)=>a+x.amount,0),exp=month.filter(x=>x.kind==='expense').reduce((a,x)=>a+x.amount,0);$('incomeTotal').textContent=money(inc);$('expenseTotal').textContent=money(exp);$('balanceTotal').textContent=money(inc-exp);$('budgetLeft').textContent=money(db.budget-exp);$('budgetBar').style.width=Math.min(100,db.budget?exp/db.budget*100:0)+'%';$('budgetDescription').textContent='月間予算 '+money(db.budget)+'／支出 '+money(exp)+(exp>db.budget?'（予算超過）':'');const cats={};month.filter(x=>x.kind==='expense').forEach(x=>cats[x.category]=(cats[x.category]||0)+x.amount);$('categorySummary').innerHTML=Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([k,v])=>'<div class="record"><span>'+esc(k)+'</span><b>'+money(v)+'</b></div>').join('')||'<p class="muted">この月の支出はまだありません。</p>';const sorted=[...db.records].sort((a,b)=>(b.date+' '+b.time).localeCompare(a.date+' '+a.time));$('recentRecords').innerHTML=sorted.slice(0,5).map(recordHTML).join('')||'<p class="muted">記録はまだありません。</p>';$('historyRecords').innerHTML=sorted.filter(x=>x.date.startsWith($('historyMonth').value)).map(recordHTML).join('')||'<p class="muted">この月の記録はありません。</p>';bindDelete()}
-$('month').onchange=render;$('historyMonth').onchange=render;$('saveBudget').onclick=()=>{if(storageReadFailed)return;const n=Number($('budget').value);if(!Number.isSafeInteger(n)||n<0)return alert('正しい予算を入力してください');db.budget=n;persist();alert('予算を保存しました')};
+const period = {unit: 'month', date: today()};
+const periodViews = ['dashboard', 'history'];
+const missingRecords = '<p class="muted">この期間の記録はありません。</p>';
+const dateKey = date => date.toISOString().slice(0, 10);
+function selectedRange() {
+  const [year, month] = period.date.split('-');
+  switch (period.unit) {
+    case 'year':
+      return {prefix: year, label: Number(year) + '年'};
+    case 'month':
+      return {prefix: year + '-' + month, label: Number(year) + '年' + Number(month) + '月'};
+    case 'day':
+      return {prefix: period.date, label: period.date.replaceAll('-', '/')};
+    case 'week': {
+      const monday = new Date(period.date + 'T00:00:00Z');
+      monday.setUTCDate(monday.getUTCDate() - (monday.getUTCDay() + 6) % 7);
+      const sunday = new Date(monday);
+      sunday.setUTCDate(sunday.getUTCDate() + 6);
+      const first = dateKey(monday);
+      const last = sunday.getUTCFullYear() > 9999 ? '9999-12-31' : dateKey(sunday);
+      return {first, last, label: first.replaceAll('-', '/') + '〜' + last.replaceAll('-', '/') + '（月曜始まり）'};
+    }
+  }
+}
+for (const view of periodViews) {
+  $(view+'Period').onchange = event => {
+    period.unit = event.target.value;
+    render();
+  };
+  $(view+'Year').onchange = event => {
+    const input = event.target;
+    if (input.value && input.validity.valid) {
+      period.date = String(input.valueAsNumber).padStart(4, '0') + '-01-01';
+    }
+    render();
+  };
+  $(view+'Month').onchange = event => {
+    const month = event.target.value;
+    if (/^(?!0000)\d{4}-(0[1-9]|1[0-2])$/.test(month)) period.date = month + '-01';
+    render();
+  };
+  $(view+'Date').onchange = event => {
+    if (event.target.value && event.target.validity.valid) period.date = event.target.value;
+    render();
+  };
+}
+function render() {
+  const range = selectedRange();
+  for (const view of periodViews) {
+    $(view+'Period').value = period.unit;
+    $(view+'YearField').hidden = period.unit !== 'year';
+    $(view+'MonthField').hidden = period.unit !== 'month';
+    $(view+'DateField').hidden = period.unit !== 'week' && period.unit !== 'day';
+    $(view+'Year').value = Number(period.date.slice(0, 4));
+    $(view+'Month').value = period.date.slice(0, 7);
+    $(view+'Date').value = period.date;
+    $(view+'DateLabel').textContent = period.unit === 'week' ? '表示する週の中の日付' : '表示する日';
+    $(view+'Range').textContent = range.label;
+  }
+
+  const records = db.records.filter(record => {
+    const day = record.date.slice(0, 10);
+    return range.prefix ? day.startsWith(range.prefix) : day >= range.first && day <= range.last;
+  });
+  let income = 0;
+  let expense = 0;
+  const categories = new Map();
+  for (const record of records) {
+    if (record.kind === 'income') {
+      income += record.amount;
+    } else {
+      expense += record.amount;
+      categories.set(record.category, (categories.get(record.category) || 0) + record.amount);
+    }
+  }
+  $('incomeTotal').textContent = money(income);
+  $('expenseTotal').textContent = money(expense);
+  $('balanceTotal').textContent = money(income-expense);
+  const showBudget = period.unit === 'month';
+  $('budgetLeftCard').hidden = $('monthlyBudget').hidden = !showBudget;
+  if (showBudget) {
+    $('budgetLeft').textContent = money(db.budget-expense);
+    $('budgetBar').style.width = Math.min(100, db.budget ? expense/db.budget*100 : 0) + '%';
+    $('budgetDescription').textContent = '月間予算 ' + money(db.budget) + '／支出 ' + money(expense) + (expense > db.budget ? '（予算超過）' : '');
+  }
+  $('categorySummary').innerHTML = [...categories].sort((a,b) => b[1]-a[1]).map(([name,total]) =>
+    '<div class="record"><span>' + esc(name) + '</span><b>' + money(total) + '</b></div>'
+  ).join('') || '<p class="muted">この期間の支出はまだありません。</p>';
+  records.sort((a,b) => (b.date+' '+b.time).localeCompare(a.date+' '+a.time));
+  $('recentRecords').innerHTML = records.slice(0,5).map(recordHTML).join('') || missingRecords;
+  $('historyRecords').innerHTML = records.map(recordHTML).join('') || missingRecords;
+  bindDelete();
+}
+$('saveBudget').onclick=()=>{if(storageReadFailed)return;const n=Number($('budget').value);if(!Number.isSafeInteger(n)||n<0)return alert('正しい予算を入力してください');db.budget=n;persist();alert('予算を保存しました')};
 $('exportData').onclick=()=>{if(storageReadFailed)return;const blob=new Blob([JSON.stringify({...db,exportedAt:new Date().toISOString()},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='life-budget-backup-'+today()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),2000)};
 $('importData').onchange=async e=>{if(storageReadFailed)return;const file=e.target.files[0];if(!file)return;try{const x=JSON.parse(await file.text());if(!Array.isArray(x.records)||x.schema!==1||!x.records.every(r=>typeof r.date==='string'&&['income','expense'].includes(r.kind)&&Number.isSafeInteger(r.amount)&&r.amount>0))throw Error('家計簿のバックアップ形式ではありません');if(!confirm('現在の家計簿の全記録をバックアップの内容に置き換えますか？'))return;db={schema:1,budget:Number(x.budget)||0,records:x.records};$('budget').value=db.budget;persist();$('dataStatus').textContent='バックアップを復元しました。'}catch(err){$('dataStatus').textContent='読み込みに失敗しました：'+err.message}finally{e.target.value=''}};
 $('mealImport').onchange=async e=>{if(storageReadFailed)return;const f=e.target.files[0];if(!f)return;const status=$('mealImportStatus');try{const data=JSON.parse(await f.text());if(data.schemaVersion!==1||!Array.isArray(data.purchases))throw Error('献立アプリのバックアップ形式ではありません');const candidates=data.purchases.map(p=>{const amount=Number(p.amount),date=String(p.date||''),time=String(p.time||''),store=String(p.store||'').trim();if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!Number.isSafeInteger(amount)||amount<=0)return null;const items=Array.isArray(p.details)&&p.details.length?p.details.map(d=>String(d.name||'商品')+(d.qty?' ×'+d.qty+(d.unit||''):'')+(d.priceExTax!=null?'（税抜'+d.priceExTax+'円）':'')).join('\n'):Array.isArray(p.items)?p.items.join('\n'):String(p.items||'');return{id:'meal-'+String(p.id||p.receiptId||date+'-'+time+'-'+store+'-'+amount),date,time,kind:'expense',amount,category:p.category==='食料品'?'食費':String(p.category||'食費'),store,payment:String(p.payment||'その他'),items,memo:'献立アプリから取り込み'+(p.memo?'｜'+p.memo:'')};}).filter(Boolean);const key=x=>[x.date,x.time,x.store,x.amount,x.kind].join('|');const known=new Set(db.records.map(key));const incoming=[];for(const p of candidates){const k=key(p);if(!known.has(k)){known.add(k);incoming.push(p)}}if(!incoming.length){status.textContent='新しい購入履歴はありません（重複分は取り込みませんでした）。';return}const total=incoming.reduce((n,p)=>n+p.amount,0);if(!confirm(incoming.length+'件、合計'+money(total)+'の購入履歴を家計簿に追加しますか？既存の記録は残します。'))return;db.records.push(...incoming);persist();status.textContent=incoming.length+'件、合計'+money(total)+'を取り込みました。重複する購入は除外しました。';}catch(err){status.textContent='取り込みに失敗しました：'+err.message}finally{e.target.value=''}};
